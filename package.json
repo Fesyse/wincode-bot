@@ -6,8 +6,12 @@
     "scripts": {
         "dev": "tsx ./src/app.ts --watch",
         "lint": "oxlint",
-        "build": "pnpm oxlint && rm -rf dist && tsx ./src/app.ts",
-        "start": "tsx ./src/app.ts"
+        "build": "pnpm db:generate && pnpm db:push && pnpm oxlint && rm -rf dist && tsx ./src/app.ts",
+        "start": "tsx ./src/app.ts",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate",
+        "db:push": "drizzle-kit push",
+        "db:studio": "drizzle-kit studio"
     },
     "keywords": [],
     "author": "",
@@ -22,11 +26,12 @@
         "zod": "^3.23.8"
     },
     "dependencies": {
-        "tsx": "^4.19.2",
+        "@paralleldrive/cuid2": "^2.2.2",
         "dotenv": "^16.4.5",
         "drizzle-orm": "^0.36.3",
         "pg": "^8.13.1",
         "telegraf": "^4.16.3",
+        "tsx": "^4.19.2",
         "typegram": "^5.2.0"
     }
 }
