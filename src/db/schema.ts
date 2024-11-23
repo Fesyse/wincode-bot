@@ -1,12 +1,12 @@
 import { createId as cuid } from "@paralleldrive/cuid2"
 import { relations } from "drizzle-orm"
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core"
+import { pgTable, varchar } from "drizzle-orm/pg-core"
 
-const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const
-type timeType = `${number}:${number}`
+export const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const
+type timeType = `${number}:${number}` // HH:MM
 
 export const groups = pgTable("group", {
-  id: integer("id").primaryKey().notNull(),
+  id: varchar("id", { length: 255 }).primaryKey(), // telegram chat id
   name: varchar("name", { length: 255 }).notNull(),
 })
 
@@ -15,7 +15,8 @@ export const lessons = pgTable("lesson", {
 	day: varchar("day", { length: 255, enum: days }).notNull(),
 	startTime: varchar("start_time", { length: 255 }).$type<timeType>().notNull(),
 	endTime: varchar("end_time", { length: 255 }).$type<timeType>().notNull(),
-  groupId: integer("group_id").references(() => groups.id).notNull(),
+
+  groupId: varchar("group_id", { length: 255 }).references(() => groups.id).notNull(),
 })
 
 export const groupsRelations = relations(groups, ({ many }) => ({
@@ -28,3 +29,6 @@ export const lessonsRelations = relations(lessons, ({ one }) => ({
     references: [groups.id],
   }),
 }))
+
+export type Group = typeof groups.$inferSelect
+export type Lesson = typeof lessons.$inferSelect

@@ -4,7 +4,7 @@
     "description": "",
     "main": "dist/app.js",
     "scripts": {
-        "dev": "tsx ./src/app.ts --watch",
+        "dev": "tsx --watch ./src/app.ts",
         "lint": "oxlint",
         "build": "pnpm db:generate && pnpm db:push && pnpm oxlint && rm -rf dist && tsx ./src/app.ts",
         "start": "tsx ./src/app.ts",
