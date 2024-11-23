@@ -1,3 +1,12 @@
 {
-  "sessions": []
+  "sessions": [
+    {
+      "id": "1819017483:1819017483",
+      "data": {
+        "type": "login_password",
+        "username": "fesyse",
+        "password": "fasd"
+      }
+    }
+  ]
 }

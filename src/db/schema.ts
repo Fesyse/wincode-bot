@@ -5,6 +5,12 @@ import { pgTable, varchar } from "drizzle-orm/pg-core"
 export const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const
 type timeType = `${number}:${number}` // HH:MM
 
+export const adminUsers = pgTable("admin_user", {
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(cuid),
+  username: varchar("username", { length: 255 }).unique().notNull(),
+  password: varchar("password", { length: 255 }).notNull(),
+})
+
 export const groups = pgTable("group", {
   id: varchar("id", { length: 255 }).primaryKey(), // telegram chat id
   name: varchar("name", { length: 255 }).notNull(),
