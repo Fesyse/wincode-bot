@@ -28,7 +28,7 @@ export function autopost(options: {
 		 	else return false
 		})
 
-		if (lesson) 
+		if (lesson)
 			ctx.replyWithHTML(`Лекция скоро начнется!\nНачало: <b>${lesson.startTime}</b> | Конец: <b>${lesson.endTime}</b>`)
 	}, MINUTE * 5)
 
