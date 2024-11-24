@@ -13,7 +13,7 @@ export const showGroup = async (ctx: Context) => {
   const groups = await db.query.groups.findMany()
 
   ctx.session.type = "show_group"
-  ctx.reply("Выберите группу: ", groupsNavigation(groups))
+  ctx.reply("Выберите группу: ", groupsNavigation(groups, ctx))
 }
 
 export const handleShowGroup = async (ctx: Context) => {

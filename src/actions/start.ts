@@ -28,12 +28,8 @@ export const start = async (ctx: Context) => {
   if (!ctx.session.admin) {
     ctx.session = {}
 
-    const admin = (await db.query.adminUsers.findFirst({
-      where: (userTable, { eq }) => eq(userTable.id, ctx.session.adminId!)
-    }))!
-
     return ctx.reply(
-      `Здравствуйте ${admin.username}, это панель управления ботом, если вы не администратор - можете удалить этот чат.`,
+      `Здравствуйте, это панель управления ботом, если вы не администратор - можете удалить этот чат.`,
       Markup.inlineKeyboard([Markup.button.callback("🚪 Войти", "login")], {
         columns: 1
       })
