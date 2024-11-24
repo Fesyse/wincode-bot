@@ -3,14 +3,15 @@ import type { NarrowedContext, Context as TelegrafContext } from "telegraf"
 import type { Message, Update } from "typegram"
 
 type AuthTypes = "login_username" | "login_password" | "change_password"
-type AddLessonTypes =
+type LessonTypes =
   | "add_lesson"
   | "add_lesson__day"
   | "add_lesson__start_time"
   | "add_lesson__end_time"
+type GroupTypes = "show_group"
 
 export type Session = {
-  type?: AuthTypes | AddLessonTypes
+  type?: AuthTypes | LessonTypes | GroupTypes
   username?: string
   adminId?: string
   admin?: boolean

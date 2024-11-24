@@ -6,13 +6,13 @@
         "username": "fesyse",
         "admin": true,
         "adminId": "nfpcdokxd5gqwpxijeytgki9",
-        "type": "add_lesson__end_time",
         "lesson": {
           "groupId": "-1002407293499",
           "day": "tuesday",
           "startTime": "13:00",
           "endTime": "14:00"
-        }
+        },
+        "type": "show_group"
       }
     }
   ]

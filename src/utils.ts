@@ -35,3 +35,7 @@ export const DMCheck = (ctx: Context) => {
   )
     return ctx.reply("Эта команда доступна только для администраторов!")
 }
+
+export const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}

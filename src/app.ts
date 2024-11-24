@@ -6,7 +6,9 @@ import {
   enterLogin,
   handleAddLesson,
   handleLogin,
+  handleShowGroup,
   logout,
+  showGroup,
   start,
   startAutoposting,
   stopAutoposting
@@ -29,17 +31,20 @@ bot.command("stop_autoposting", stopAutoposting)
 
 // Admin commands
 
+// Auth
 bot.action("login", enterLogin)
 bot.action("logout", logout)
 bot.action("change_password", changePassword)
 
+// Groups | Lessons
+bot.action("add_lesson", addLession)
+bot.action("show_groups", showGroup)
+
 bot.on("text", async ctx => {
   handleLogin(ctx)
-  // handleShowGroup
+  handleShowGroup(ctx)
   handleAddLesson(ctx)
 })
-
-bot.action("add_lesson", addLession)
 
 process.once("SIGINT", () => bot.stop("SIGINT"))
 process.once("SIGTERM", () => bot.stop("SIGTERM"))
