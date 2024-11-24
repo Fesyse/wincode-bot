@@ -1,10 +1,14 @@
+import {
+  addLession,
+  enterLogin,
+  handleLogin,
+  start,
+  startAutoposting,
+  stopAutoposting
+} from "@/commands"
 import { env } from "@/env"
 import { Telegraf } from "telegraf"
 import LocalSession from "telegraf-session-local"
-import { addLession } from "./commands/add-lession"
-import { enterLogin, handleLogin } from "./commands/auth"
-import { startAutoposting, stopAutoposting } from "./commands/autoposting"
-import { start } from "./commands/start"
 import { Context } from "./types"
 
 export const bot = new Telegraf(env.BOT_TOKEN)
