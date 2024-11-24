@@ -4,6 +4,7 @@ import type { Message, Update } from "typegram"
 export type Session = {
   type?: "login_username" | "login_password" | "add_lesson"
   username?: string
+  adminId?: string
   admin?: boolean
 }
 

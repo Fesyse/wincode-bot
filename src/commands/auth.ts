@@ -13,22 +13,32 @@ export const enterLogin = (ctx: Context) => {
   ctx.reply("Введите логин: ")
 }
 
-export const handleLogin = (ctx: Context) => {
+export const handleLogin = async (ctx: Context) => {
   if (ctx.session.type === "login_username") {
     ctx.session.username = ctx.message.text
 
     ctx.reply("Введите пароль: ")
     ctx.session.type = "login_password"
   } else if (ctx.session.type === "login_password") {
-    ctx.deleteMessage(ctx.message.message_id)
-    ctx.reply("......")
-
-    login(
-      {
-        username: ctx.session.username!,
-        password: ctx.message.text
-      },
-      ctx
-    )
+    await ctx.deleteMessage(ctx.message.message_id)
+    await Promise.all([
+      ctx.reply("......"),
+      login(
+        {
+          username: ctx.session.username!,
+          password: ctx.message.text
+        },
+        ctx
+      )
+    ])
   }
+}
+
+export const logout = (ctx: Context) => {
+  ctx.session.type = undefined
+  ctx.session.username = undefined
+  ctx.session.admin = undefined
+  ctx.session.adminId = undefined
+
+  ctx.reply("Вы успешно вышли из админки!")
 }

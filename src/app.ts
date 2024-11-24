@@ -2,6 +2,7 @@ import {
   addLession,
   enterLogin,
   handleLogin,
+  logout,
   start,
   startAutoposting,
   stopAutoposting
@@ -30,6 +31,8 @@ bot.command("stop_autoposting", ctx =>
 // Admin commands
 
 bot.action("login", ctx => enterLogin(ctx as unknown as Context))
+bot.action("logout", ctx => logout(ctx as unknown as Context))
+
 bot.on("text", async context => {
   handleLogin(context as unknown as Context)
 })
