@@ -1,5 +1,7 @@
+import { days, type Lesson } from "@/db/schema"
 import { type Context } from "@/types"
-import { days, type Lesson } from "./db/schema"
+import * as fs from "fs"
+import { Input } from "telegraf"
 
 const MINUTE = 60
 
@@ -16,7 +18,7 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
     // Filter lessons for today
     const todayLessons = lessons.filter(lesson => lesson.day === currentDay)
 
-    todayLessons.forEach(lesson => {
+    todayLessons.forEach(async lesson => {
       const [hours, minutes] = lesson.startTime.split(":").map(Number)
       const lessonStartTime = new Date(now)
       lessonStartTime.setHours(hours, minutes, 0, 0) // Set lesson start time
@@ -30,9 +32,12 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
 
       // Notify when the lesson starts
       if (timeDiff <= 0 && timeDiff > -1 && !notificationStates[lesson.id]) {
-        // ctx.replyWithPhoto()
+        await ctx.sendPhoto(
+          Input.fromBuffer(fs.readFileSync("./assets/attention.png"))
+        )
         ctx.replyWithHTML(
-          `Лекция началась!\nНачало: <b>${lesson.startTime}</b> | Конец: <b>${lesson.endTime}</b>`
+          `Добрый день, ребят. Напоминаю вам, что у нас занятие в ${lesson.startTime})! 
+P.S. Если прочитали данное сообщение поставьте 🔥`
         )
         notificationStates[lesson.id] = true // Mark as notified
       }

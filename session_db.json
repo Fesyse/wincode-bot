@@ -3,15 +3,14 @@
     {
       "id": "1819017483:1819017483",
       "data": {
-        "type": "add_lesson__end_time",
         "username": "fesyse",
         "admin": true,
         "adminId": "nfpcdokxd5gqwpxijeytgki9",
         "lesson": {
           "groupId": "-1002407293499",
           "day": "sunday",
-          "startTime": "19:30",
-          "endTime": "/clear"
+          "startTime": "20:49",
+          "endTime": "21:00"
         }
       }
     }
