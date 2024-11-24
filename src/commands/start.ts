@@ -20,14 +20,13 @@ export const start = async (ctx: Context) => {
     })
 
     return ctx.replyWithHTML(
-      "Создана новая группа, теперь добавьте лекции в чат с помощью команды <code>/add_lesson</code>."
+      "Создана новая группа, теперь добавьте лекции в чат с помощью команды <code>/add_lesson</code> в панели управления ботом."
     )
   }
 
   // Admin
   if (!ctx.session.admin) {
-    ctx.session.type = undefined
-    ctx.session.username = undefined
+    ctx.session = {}
 
     return ctx.reply(
       "Здравствуйте, это панель управления ботом, если вы не администратор - можете удалить этот чат.",

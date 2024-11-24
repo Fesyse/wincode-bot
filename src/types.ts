@@ -2,7 +2,7 @@ import type { NarrowedContext, Context as TelegrafContext } from "telegraf"
 import type { Message, Update } from "typegram"
 
 export type Session = {
-  type?: "login_username" | "login_password" | "add_lesson"
+  type?: "login_username" | "login_password" | "add_lesson" | "change_password"
   username?: string
   adminId?: string
   admin?: boolean
