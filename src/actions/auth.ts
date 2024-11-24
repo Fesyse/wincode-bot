@@ -1,10 +1,10 @@
 import { changePassword, login } from "@/auth"
 import { type Context } from "@/types"
-import { checkAdmin } from "@/utils"
+import { DMCheck } from "@/utils"
 import { Markup } from "telegraf"
 
 export const enterLogin = (ctx: Context) => {
-  if (checkAdmin(ctx)) return
+  if (DMCheck(ctx)) return
 
   ctx.session.type = "login_username"
   ctx.reply("Введите логин: ")

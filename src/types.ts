@@ -1,11 +1,26 @@
+import type { days } from "@/db/schema"
 import type { NarrowedContext, Context as TelegrafContext } from "telegraf"
 import type { Message, Update } from "typegram"
 
+type AuthTypes = "login_username" | "login_password" | "change_password"
+type AddLessonTypes =
+  | "add_lesson"
+  | "add_lesson__day"
+  | "add_lesson__start_time"
+  | "add_lesson__end_time"
+
 export type Session = {
-  type?: "login_username" | "login_password" | "add_lesson" | "change_password"
+  type?: AuthTypes | AddLessonTypes
   username?: string
   adminId?: string
   admin?: boolean
+
+  lesson?: {
+    day?: (typeof days)[number]
+    startTime?: string
+    endTime?: string
+    groupId?: string
+  }
 }
 
 export type Context = NarrowedContext<

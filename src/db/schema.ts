@@ -11,7 +11,7 @@ export const days = [
   "saturday",
   "sunday"
 ] as const
-type timeType = `${number}:${number}` // HH:MM
+export type TimeType = `${number}:${number}` // HH:MM
 
 export const adminUsers = pgTable("admin_user", {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(cuid),
@@ -27,8 +27,8 @@ export const groups = pgTable("group", {
 export const lessons = pgTable("lesson", {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(cuid),
   day: varchar("day", { length: 255, enum: days }).notNull(),
-  startTime: varchar("start_time", { length: 255 }).$type<timeType>().notNull(),
-  endTime: varchar("end_time", { length: 255 }).$type<timeType>().notNull(),
+  startTime: varchar("start_time", { length: 255 }).$type<TimeType>().notNull(),
+  endTime: varchar("end_time", { length: 255 }).$type<TimeType>().notNull(),
 
   groupId: varchar("group_id", { length: 255 })
     .references(() => groups.id)

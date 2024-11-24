@@ -10,13 +10,12 @@ import {
   start,
   startAutoposting,
   stopAutoposting
-} from "@/commands"
+} from "@/actions"
 import { env } from "@/env"
 import { Telegraf } from "telegraf"
 import LocalSession from "telegraf-session-local"
-import { Context } from "./types"
 
-export const bot = new Telegraf(env.BOT_TOKEN)
+const bot = new Telegraf(env.BOT_TOKEN)
 const sessions = new LocalSession({ database: "session_db.json" })
 
 bot.use(sessions.middleware())
@@ -34,10 +33,10 @@ bot.action("login", enterLogin)
 bot.action("logout", logout)
 bot.action("change_password", changePassword)
 
-bot.on("text", async context => {
-  handleLogin(context as unknown as Context)
+bot.on("text", async ctx => {
+  handleLogin(ctx)
   // handleShowGroup
-  handleAddLesson(context as unknown as Context)
+  handleAddLesson(ctx)
 })
 
 bot.action("add_lesson", addLession)
