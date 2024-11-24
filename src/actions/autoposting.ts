@@ -2,10 +2,17 @@ import { autopost } from "@/autoposting"
 import { db } from "@/db"
 import { Context } from "@/types"
 
-const autopostings = new Map<string, NodeJS.Timeout>()
-
-export const startAutoposting = async (ctx: Context) => {
+export const startAutoposting = async (
+  ctx: Context,
+  autopostings: Map<string, NodeJS.Timeout>
+) => {
   const chat = ctx.update.message.chat
+  if (chat.type === "private")
+    return ctx.reply("Эта команда доступна только в группах!")
+
+  if (autopostings.has(chat.id.toString()))
+    return ctx.reply("Авто-оповещение уже включено!")
+
   const group = await db.query.groups.findFirst({
     with: {
       lessons: true
@@ -19,8 +26,8 @@ export const startAutoposting = async (ctx: Context) => {
     )
 
   if (group.lessons.length === 0)
-    return ctx.replyWithHTML(
-      "В группе нет лекций, добавьте лекции с помощью команды <code>/add_lesson</code>!"
+    return ctx.reply(
+      "В группе нет лекций, добавьте их в панели управления ботом!"
     )
 
   const autoposting = autopost({
@@ -33,7 +40,14 @@ export const startAutoposting = async (ctx: Context) => {
   ctx.reply("Авто-оповещение включено!")
 }
 
-export const stopAutoposting = (ctx: Context) => {
+export const stopAutoposting = (
+  ctx: Context,
+  autopostings: Map<string, NodeJS.Timeout>
+) => {
+  const chat = ctx.update.message.chat
+  if (chat.type === "private")
+    return ctx.reply("Эта команда доступна только в группах!")
+
   const message = ctx.update.message
 
   const chatId = message.chat.id.toString()

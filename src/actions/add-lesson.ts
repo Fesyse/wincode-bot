@@ -4,7 +4,7 @@ import type { Context, Session } from "@/types"
 import { checkAdmin, daysTranslationsRussianToEnglish } from "@/utils"
 import { Markup } from "telegraf"
 
-export const addLession = async (ctx: Context) => {
+export const addLesson = async (ctx: Context) => {
   if (checkAdmin(ctx)) return
 
   const groups = await db.query.groups.findMany()
@@ -83,6 +83,7 @@ export const handleAddLesson = async (ctx: Context) => {
       groupId: lesson.groupId
     })
 
+    ctx.session.type = undefined
     ctx.reply("Лекция успешно добавлена!")
   }
 }

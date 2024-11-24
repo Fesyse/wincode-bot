@@ -6,30 +6,43 @@ const MINUTE = 60
 export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
   const { ctx, lessons } = options
 
+  // Object to track notification states for each lesson
+  const notificationStates: Record<string, boolean> = {}
+
   const interval = setInterval(() => {
-    const lesson = lessons.find(lesson => {
-      const now = new Date()
-      // returning if current day is not the same as the lesson day
-      if (now.getDay() !== days.indexOf(lesson.day) + 1) return false
+    const now = new Date()
+    const currentDay = days[(now.getDay() + 6) % 7]
 
+    // Filter lessons for today
+    const todayLessons = lessons.filter(lesson => lesson.day === currentDay)
+
+    todayLessons.forEach(lesson => {
       const [hours, minutes] = lesson.startTime.split(":").map(Number)
+      const lessonStartTime = new Date(now)
+      lessonStartTime.setHours(hours, minutes, 0, 0) // Set lesson start time
 
-      const currentHour = now.getHours()
-      const currentMinutes = now.getMinutes()
+      const timeDiff = (lessonStartTime.getTime() - now.getTime()) / 1000 / 60 // Difference in minutes
 
-      const time = hours * 60 * 60 + minutes * 60
-      const currentTime = currentHour * 60 * 60 + currentMinutes * 60
+      // Initialize notification state for this lesson if not set
+      if (!notificationStates[lesson.id]) {
+        notificationStates[lesson.id] = false // false means not notified yet
+      }
 
-      // checking if lesson is about to start (15 minutes before)
-      if (time - currentTime >= MINUTE * 15) return true
-      else return false
+      // Notify when the lesson starts
+      if (timeDiff <= 0 && timeDiff > -1 && !notificationStates[lesson.id]) {
+        // ctx.replyWithPhoto()
+        ctx.replyWithHTML(
+          `Лекция началась!\nНачало: <b>${lesson.startTime}</b> | Конец: <b>${lesson.endTime}</b>`
+        )
+        notificationStates[lesson.id] = true // Mark as notified
+      }
+
+      // Reset notification state after the lesson ends (optional)
+      if (timeDiff < -1) {
+        notificationStates[lesson.id] = false // Allow notifications for future lessons
+      }
     })
-
-    if (lesson)
-      ctx.replyWithHTML(
-        `Лекция скоро начнется!\nНачало: <b>${lesson.startTime}</b> | Конец: <b>${lesson.endTime}</b>`
-      )
-  }, MINUTE * 5)
+  }, MINUTE * 1000) // Check every minute
 
   return interval
 }

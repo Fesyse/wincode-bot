@@ -1,4 +1,4 @@
-export * from "./add-lession"
+export * from "./add-lesson"
 export * from "./auth"
 export * from "./autoposting"
 export * from "./change-password"

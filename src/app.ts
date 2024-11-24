@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import {
-  addLession,
+  addLesson,
   changePassword,
   enterLogin,
   handleAddLesson,
@@ -17,6 +17,7 @@ import { env } from "@/env"
 import { Telegraf } from "telegraf"
 import LocalSession from "telegraf-session-local"
 
+const autopostings = new Map<string, NodeJS.Timeout>()
 const bot = new Telegraf(env.BOT_TOKEN)
 const sessions = new LocalSession({ database: "session_db.json" })
 
@@ -26,8 +27,8 @@ bot.start(start)
 
 // Autoposting
 
-bot.command("start_autoposting", startAutoposting)
-bot.command("stop_autoposting", stopAutoposting)
+bot.command("start_autoposting", ctx => startAutoposting(ctx, autopostings))
+bot.command("stop_autoposting", ctx => stopAutoposting(ctx, autopostings))
 
 // Admin commands
 
@@ -37,7 +38,7 @@ bot.action("logout", logout)
 bot.action("change_password", changePassword)
 
 // Groups | Lessons
-bot.action("add_lesson", addLession)
+bot.action("add_lesson", addLesson)
 bot.action("show_groups", showGroup)
 
 bot.on("text", async ctx => {
@@ -46,8 +47,14 @@ bot.on("text", async ctx => {
   handleAddLesson(ctx)
 })
 
-process.once("SIGINT", () => bot.stop("SIGINT"))
-process.once("SIGTERM", () => bot.stop("SIGTERM"))
+process.once("SIGINT", () => {
+  bot.stop("SIGINT")
+  autopostings.forEach(interval => clearInterval(interval))
+})
+process.once("SIGTERM", () => {
+  bot.stop("SIGTERM")
+  autopostings.forEach(interval => clearInterval(interval))
+})
 
 // Bot Launch
 bot.launch()
