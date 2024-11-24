@@ -1,7 +1,10 @@
+// @ts-nocheck
+
 import {
   addLession,
   changePassword,
   enterLogin,
+  handleAddLesson,
   handleLogin,
   logout,
   start,
@@ -18,28 +21,26 @@ const sessions = new LocalSession({ database: "session_db.json" })
 
 bot.use(sessions.middleware())
 
-bot.start(ctx => start(ctx as unknown as Context))
+bot.start(start)
 
 // Autoposting
 
-bot.command("start_autoposting", ctx =>
-  startAutoposting(ctx as unknown as Context)
-)
-bot.command("stop_autoposting", ctx =>
-  stopAutoposting(ctx as unknown as Context)
-)
+bot.command("start_autoposting", startAutoposting)
+bot.command("stop_autoposting", stopAutoposting)
 
 // Admin commands
 
-bot.action("login", ctx => enterLogin(ctx as unknown as Context))
-bot.action("logout", ctx => logout(ctx as unknown as Context))
-bot.action("change_password", ctx => changePassword(ctx as unknown as Context))
+bot.action("login", enterLogin)
+bot.action("logout", logout)
+bot.action("change_password", changePassword)
 
 bot.on("text", async context => {
   handleLogin(context as unknown as Context)
+  // handleShowGroup
+  handleAddLesson(context as unknown as Context)
 })
 
-bot.action("add_lesson", ctx => addLession(ctx as unknown as Context))
+bot.action("add_lesson", addLession)
 
 process.once("SIGINT", () => bot.stop("SIGINT"))
 process.once("SIGTERM", () => bot.stop("SIGTERM"))

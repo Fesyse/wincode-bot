@@ -1,14 +1,10 @@
 import { changePassword, login } from "@/auth"
 import { type Context } from "@/types"
+import { checkAdmin } from "@/utils"
 import { Markup } from "telegraf"
-import { Message } from "typegram"
 
 export const enterLogin = (ctx: Context) => {
-  if (
-    "message" in ctx.update &&
-    (ctx.update.message as Message).chat.type !== "private"
-  )
-    return ctx.reply("Эта команда доступна только для администраторов!")
+  if (checkAdmin(ctx)) return
 
   ctx.session.type = "login_username"
   ctx.reply("Введите логин: ")
@@ -48,10 +44,7 @@ export const handleLogin = async (ctx: Context) => {
 }
 
 export const logout = async (ctx: Context) => {
-  ctx.session.type = undefined
-  ctx.session.username = undefined
-  ctx.session.admin = undefined
-  ctx.session.adminId = undefined
+  ctx.session = {}
 
   await ctx.reply("Вы успешно вышли из админки!")
   return ctx.reply(

@@ -1,11 +1,8 @@
-import { Context } from "@/types"
+import { type Context } from "@/types"
+import { checkAdmin } from "@/utils"
 
 export const changePassword = async (ctx: Context) => {
-  if (
-    ("message" in ctx.update && ctx.update.message.chat.type !== "private") ||
-    !ctx.session.admin
-  )
-    return ctx.reply("Эта команда доступна только для администраторов!")
+  if (checkAdmin(ctx)) return
 
   ctx.session.type = "change_password"
   ctx.reply("Введите новый пароль: ")
