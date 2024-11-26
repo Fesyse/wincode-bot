@@ -9,7 +9,10 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
   const { ctx, lessons } = options
 
   // Object to track notification states for each lesson
-  const notificationStates: Record<string, boolean> = {}
+  const notificationStates: Record<
+    string,
+    { notifiedStart: boolean; notifiedBefore: boolean }
+  > = {}
 
   const interval = setInterval(() => {
     const now = new Date()
@@ -23,28 +26,47 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
       const lessonStartTime = new Date(now)
       lessonStartTime.setHours(hours, minutes, 0, 0) // Set lesson start time
 
+      // Calculate time differences
       const timeDiff = (lessonStartTime.getTime() - now.getTime()) / 1000 / 60 // Difference in minutes
+      const thirtyMinutesBeforeDiff = timeDiff + 30 // Time difference for 30 minutes before
 
       // Initialize notification state for this lesson if not set
       if (!notificationStates[lesson.id]) {
-        notificationStates[lesson.id] = false // false means not notified yet
+        notificationStates[lesson.id] = {
+          notifiedStart: false,
+          notifiedBefore: false
+        }
       }
 
-      // Notify when the lesson starts
-      if (timeDiff <= 0 && timeDiff > -1 && !notificationStates[lesson.id]) {
+      // Notify when it's 30 minutes before the lesson starts
+      if (
+        thirtyMinutesBeforeDiff <= 0 &&
+        thirtyMinutesBeforeDiff > -1 &&
+        !notificationStates[lesson.id].notifiedBefore
+      ) {
         await ctx.sendPhoto(
           Input.fromBuffer(fs.readFileSync("./assets/attention.png"))
         )
         ctx.replyWithHTML(
-          `Добрый день, ребят. Напоминаю вам, что у нас занятие в ${lesson.startTime})! 
+          `Напоминаю вам, что у нас занятие начнется через 30 минут в ${lesson.startTime}! 
 P.S. Если прочитали данное сообщение поставьте 🔥`
         )
-        notificationStates[lesson.id] = true // Mark as notified
+        notificationStates[lesson.id].notifiedBefore = true // Mark as notified for before the lesson
       }
 
-      // Reset notification state after the lesson ends (optional)
+      // Notify when the lesson starts
+      if (
+        timeDiff <= 0 &&
+        timeDiff > -1 &&
+        !notificationStates[lesson.id].notifiedStart
+      ) {
+        ctx.replyWithHTML(`Занятие уже началось! 🎉`)
+        notificationStates[lesson.id].notifiedStart = true // Mark as notified for the start of the lesson
+      }
+
+      // Reset notification states after the lesson ends (optional)
       if (timeDiff < -1) {
-        notificationStates[lesson.id] = false // Allow notifications for future lessons
+        delete notificationStates[lesson.id] // Remove state for this lesson to allow notifications for future lessons
       }
     })
   }, MINUTE * 1000) // Check every minute
