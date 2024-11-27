@@ -4,6 +4,7 @@ import * as fs from "fs"
 import { Input } from "telegraf"
 
 const MINUTE = 60
+const attentionImage = fs.readFileSync("./assets/attention.png")
 
 export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
   const { ctx, lessons } = options
@@ -44,9 +45,7 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
         thirtyMinutesBeforeDiff > -1 &&
         !notificationStates[lesson.id].notifiedBefore
       ) {
-        await ctx.sendPhoto(
-          Input.fromBuffer(fs.readFileSync("./assets/attention.png"))
-        )
+        await ctx.sendPhoto(Input.fromBuffer(attentionImage))
         ctx.replyWithHTML(
           `Напоминаю вам, что у нас занятие начнется через 30 минут в ${lesson.startTime}! 
 P.S. Если прочитали данное сообщение поставьте 🔥`
