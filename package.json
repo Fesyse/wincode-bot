@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "tsx --watch ./src/app.ts ",
     "lint": "oxlint",
-    "build": "pnpm db:generate && pnpm db:push && pnpm oxlint && rm -rf dist && tsx ./src/app.ts",
-    "start": "tsx ./src/app.ts",
+    "build": "pnpm db:build && pnpm lint && rm -rf dist && pnpm esbuild --bundle ./src/app.ts --outdir=dist --platform=node",
+    "start": "node ./dist/app.js",
+    "db:build": "pnpm db:generate && pnpm db:push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -22,6 +23,7 @@
     "@types/pg": "^8.11.10",
     "drizzle-kit": "^0.28.1",
     "oxlint": "^0.13.0",
+    "esbuild": "^0.24.0",
     "typescript": "^5.6.3",
     "zod": "^3.23.8"
   },
