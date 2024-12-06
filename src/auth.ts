@@ -40,7 +40,7 @@ export const changePassword = async (
       .set({ password: newPassword })
       .where(eq(adminUsers.id, ctx.session.adminId!))
     ctx.reply("Пароль успешно изменен!")
-  } catch (error) {
+  } catch {
     ctx.reply("Произошла ошибка при изменении пароля!")
   }
 }

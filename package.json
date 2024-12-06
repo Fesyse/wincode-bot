@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx --watch ./src/app.ts ",
     "lint": "oxlint",
-    "build": "pnpm db:build && pnpm lint && rm -rf dist && pnpm esbuild --bundle ./src/app.ts --outdir=dist --platform=node",
+    "build": "echo 'Building DB...' && pnpm db:build && echo '\nLinting...' pnpm lint && rm -rf dist && echo '\nBuilding...'&& pnpm esbuild --bundle ./src/app.ts --outdir=dist --platform=node --minify --packages=external",
     "start": "node ./dist/app.js",
     "db:build": "pnpm db:generate && pnpm db:push",
     "db:generate": "drizzle-kit generate",
