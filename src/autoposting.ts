@@ -16,7 +16,9 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
   > = {}
 
   const interval = setInterval(() => {
-    const now = new Date()
+    const now = new Date(
+      new Date().toLocaleString("ru-RU", { timeZone: "Asia/Irkutsk" })
+    )
     const currentDay = days[(now.getDay() + 6) % 7]
 
     // Filter lessons for today
