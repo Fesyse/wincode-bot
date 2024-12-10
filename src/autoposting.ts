@@ -1,5 +1,6 @@
 import { days, type Lesson } from "@/db/schema"
 import { type Context } from "@/types"
+import { TZDate } from "@date-fns/tz"
 import * as fs from "fs"
 import { Input } from "telegraf"
 
@@ -16,9 +17,7 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
   > = {}
 
   const interval = setInterval(() => {
-    const now = new Date(
-      new Date().toLocaleString("ru-RU", { timeZone: "Asia/Irkutsk" })
-    )
+    const now = new TZDate(new Date(), "Asia/Irkutsk")
     const currentDay = days[(now.getDay() + 6) % 7]
 
     // Filter lessons for today
