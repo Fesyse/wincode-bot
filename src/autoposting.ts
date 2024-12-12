@@ -25,7 +25,7 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
 
     todayLessons.forEach(async lesson => {
       const [hours, minutes] = lesson.startTime.split(":").map(Number)
-      const lessonStartTime = new Date(now)
+      const lessonStartTime = new TZDate(new Date(), "Asia/Irkutsk")
       lessonStartTime.setHours(hours, minutes, 0, 0) // Set lesson start time
 
       // Calculate time differences
