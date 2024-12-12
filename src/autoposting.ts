@@ -17,7 +17,7 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
   > = {}
 
   const interval = setInterval(() => {
-    const now = new TZDate(new Date(), "Asia/Irkutsk")
+    const now = new TZDate(new Date(), "Asia/Irkutsk").internal as TZDate
     const currentDay = days[(now.getDay() + 6) % 7]
 
     // Filter lessons for today
@@ -25,12 +25,14 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
 
     todayLessons.forEach(async lesson => {
       const [hours, minutes] = lesson.startTime.split(":").map(Number)
-      const lessonStartTime = new TZDate(new Date(), "Asia/Irkutsk")
+      const lessonStartTime = new Date()
       lessonStartTime.setHours(hours, minutes, 0, 0) // Set lesson start time
 
       // Calculate time differences
       const timeDiff = (lessonStartTime.getTime() - now.getTime()) / 1000 / 60 // Difference in minutes
-      const thirtyMinutesBeforeDiff = timeDiff + 30 // Time difference for 30 minutes before
+
+      const thirtyMinutesBeforeDiff = timeDiff - 30 // Time difference for 30 minutes before
+      console.log(timeDiff, thirtyMinutesBeforeDiff)
 
       // Initialize notification state for this lesson if not set
       if (!notificationStates[lesson.id]) {
