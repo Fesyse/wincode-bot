@@ -1,6 +1,7 @@
 import { autopost } from "@/autoposting"
 import { db } from "@/db"
 import { Context } from "@/types"
+import { checkAdmin } from "@/utils"
 
 export const startAutoposting = async (
   ctx: Context,
@@ -31,13 +32,41 @@ export const startAutoposting = async (
     )
 
   const autoposting = autopost({
-    ctx,
-    lessons: group.lessons
+    groupId: group.id,
+    lessons: group.lessons,
+    ctx
   })
 
   autopostings.set(chat.id.toString(), autoposting)
 
   ctx.reply("Авто-оповещение включено!")
+}
+
+export const startAutopostingAll = async (
+  ctx: Context,
+  autopostings: Map<string, NodeJS.Timeout>
+) => {
+  if (checkAdmin(ctx)) return
+
+  const groups = await db.query.groups.findMany({
+    with: {
+      lessons: true
+    }
+  })
+
+  groups.forEach(async group => {
+    if (group.lessons.length === 0) return
+
+    const autoposting = autopost({
+      groupId: group.id,
+      lessons: group.lessons,
+      ctx
+    })
+
+    autopostings.set(group.id, autoposting)
+  })
+
+  ctx.reply("Авто-оповещение включено для всех групп!")
 }
 
 export const stopAutoposting = (
@@ -59,4 +88,30 @@ export const stopAutoposting = (
   autopostings.delete(chatId)
 
   ctx.reply("Авто-оповещение отключено!")
+}
+
+export const stopAutopostingAll = async (
+  ctx: Context,
+  autopostings: Map<string, NodeJS.Timeout>
+) => {
+  const groups = await db.query.groups.findMany({
+    with: {
+      lessons: true
+    }
+  })
+
+  groups.forEach(async group => {
+    if (group.lessons.length === 0) return
+
+    const chatId = group.id
+    const posting = autopostings.get(chatId)
+
+    if (!posting) return
+
+    clearInterval(posting)
+    autopostings.delete(chatId)
+  })
+
+  ctx.reply("Авто-оповещение отключено для всех групп!")
+  autopostings.clear()
 }

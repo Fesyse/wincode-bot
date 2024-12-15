@@ -1,5 +1,6 @@
 import { db } from "@/db"
 import { type days, lessons, type TimeType } from "@/db/schema"
+import { adminActions } from "@/layout/admin-actions"
 import type { Context, Session } from "@/types"
 import { checkAdmin, daysTranslationsRussianToEnglish } from "@/utils"
 import { Markup } from "telegraf"
@@ -84,6 +85,6 @@ export const handleAddLesson = async (ctx: Context) => {
     })
 
     ctx.session.type = undefined
-    ctx.reply("Лекция успешно добавлена!")
+    ctx.reply("Лекция успешно добавлена!", adminActions())
   }
 }

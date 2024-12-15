@@ -11,7 +11,9 @@ import {
   showGroup,
   start,
   startAutoposting,
-  stopAutoposting
+  startAutopostingAll,
+  stopAutoposting,
+  stopAutopostingAll
 } from "@/actions"
 import { env } from "@/env"
 import { Telegraf } from "telegraf"
@@ -26,7 +28,9 @@ bot.use(sessions.middleware())
 bot.start(start)
 
 // Autoposting
-
+bot.command("start_autoposting_all", ctx =>
+  startAutopostingAll(ctx, autopostings)
+)
 bot.command("start_autoposting", ctx => startAutoposting(ctx, autopostings))
 bot.command("stop_autoposting", ctx => stopAutoposting(ctx, autopostings))
 
@@ -40,6 +44,10 @@ bot.action("change_password", changePassword)
 // Groups | Lessons
 bot.action("add_lesson", addLesson)
 bot.action("show_groups", showGroup)
+bot.action("start_autoposting_all", ctx =>
+  startAutopostingAll(ctx, autopostings)
+)
+bot.action("stop_autoposting_all", ctx => stopAutopostingAll(ctx, autopostings))
 
 bot.on("text", async ctx => {
   handleLogin(ctx)

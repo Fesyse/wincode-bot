@@ -7,8 +7,14 @@ import { Input } from "telegraf"
 const MINUTE = 60
 const attentionImage = fs.readFileSync("./assets/attention.png")
 
-export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
-  const { ctx, lessons } = options
+export function autopost(options: {
+  ctx: Context
+  groupId: string
+  lessons: Lesson[]
+}) {
+  const { groupId, ctx, lessons } = options
+
+  console.log(groupId)
 
   // Object to track notification states for each lesson
   const notificationStates: Record<
@@ -17,7 +23,7 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
   > = {}
 
   const interval = setInterval(() => {
-    const now = new TZDate(new Date(), "Asia/Irkutsk").internal as TZDate
+    const now = new TZDate(new Date(), "Asia/Irkutsk")
     const currentDay = days[(now.getDay() + 6) % 7]
 
     // Filter lessons for today
@@ -32,6 +38,7 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
       const timeDiff = (lessonStartTime.getTime() - now.getTime()) / 1000 / 60 // Difference in minutes
 
       const thirtyMinutesBeforeDiff = timeDiff - 30 // Time difference for 30 minutes before
+
       console.log(timeDiff, thirtyMinutesBeforeDiff)
 
       // Initialize notification state for this lesson if not set
@@ -44,12 +51,13 @@ export function autopost(options: { ctx: Context; lessons: Lesson[] }) {
 
       // Notify when it's 30 minutes before the lesson starts
       if (
-        thirtyMinutesBeforeDiff <= 0 &&
+        thirtyMinutesBeforeDiff <= 1 &&
         thirtyMinutesBeforeDiff > -1 &&
         !notificationStates[lesson.id].notifiedBefore
       ) {
-        await ctx.sendPhoto(Input.fromBuffer(attentionImage))
-        ctx.replyWithHTML(
+        await ctx.telegram.sendPhoto(groupId, Input.fromBuffer(attentionImage))
+        ctx.telegram.sendMessage(
+          groupId,
           `Напоминаю вам, что у нас занятие начнется через 30 минут в ${lesson.startTime}! 
 P.S. Если прочитали данное сообщение поставьте 🔥`
         )
@@ -58,11 +66,11 @@ P.S. Если прочитали данное сообщение поставь�
 
       // Notify when the lesson starts
       if (
-        timeDiff <= 0 &&
+        timeDiff <= 1 &&
         timeDiff > -1 &&
         !notificationStates[lesson.id].notifiedStart
       ) {
-        ctx.replyWithHTML(`Занятие уже началось! 🎉`)
+        ctx.telegram.sendMessage(groupId, `Занятие уже началось! 🎉`)
         notificationStates[lesson.id].notifiedStart = true // Mark as notified for the start of the lesson
       }
 

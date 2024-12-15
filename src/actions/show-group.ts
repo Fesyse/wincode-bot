@@ -1,4 +1,5 @@
 import { db } from "@/db"
+import { adminActions } from "@/layout/admin-actions"
 import { groupsNavigation } from "@/layout/groups-navigation"
 import type { Context } from "@/types"
 import {
@@ -39,6 +40,7 @@ export const handleShowGroup = async (ctx: Context) => {
 <strong>Окончание:</strong> ${lesson.endTime}
 `
         )
-        .join("\n-----\n")
+        .join("\n-----\n"),
+    adminActions()
   )
 }
