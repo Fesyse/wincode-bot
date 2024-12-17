@@ -31,15 +31,13 @@ export function autopost(options: {
 
     todayLessons.forEach(async lesson => {
       const [hours, minutes] = lesson.startTime.split(":").map(Number)
-      const lessonStartTime = new Date()
+      const lessonStartTime = new TZDate(new Date(), "Asia/Irkutsk")
       lessonStartTime.setHours(hours, minutes, 0, 0) // Set lesson start time
 
       // Calculate time differences
       const timeDiff = (lessonStartTime.getTime() - now.getTime()) / 1000 / 60 // Difference in minutes
 
       const thirtyMinutesBeforeDiff = timeDiff - 30 // Time difference for 30 minutes before
-
-      console.log(timeDiff, thirtyMinutesBeforeDiff)
 
       // Initialize notification state for this lesson if not set
       if (!notificationStates[lesson.id]) {
