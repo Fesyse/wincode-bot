@@ -94,23 +94,7 @@ export const stopAutopostingAll = async (
   ctx: Context,
   autopostings: Map<string, NodeJS.Timeout>
 ) => {
-  const groups = await db.query.groups.findMany({
-    with: {
-      lessons: true
-    }
-  })
-
-  groups.forEach(async group => {
-    if (group.lessons.length === 0) return
-
-    const chatId = group.id
-    const posting = autopostings.get(chatId)
-
-    if (!posting) return
-
-    clearInterval(posting)
-    autopostings.delete(chatId)
-  })
+  autopostings.forEach(interval => clearInterval(interval))
 
   ctx.reply("Авто-оповещение отключено для всех групп!")
   autopostings.clear()

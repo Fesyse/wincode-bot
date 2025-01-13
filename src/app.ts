@@ -31,6 +31,9 @@ bot.start(start)
 bot.command("start_autoposting_all", ctx =>
   startAutopostingAll(ctx, autopostings)
 )
+bot.command("stop_autoposting_all", ctx =>
+  stopAutopostingAll(ctx, autopostings)
+)
 bot.command("start_autoposting", ctx => startAutoposting(ctx, autopostings))
 bot.command("stop_autoposting", ctx => stopAutoposting(ctx, autopostings))
 

@@ -14,8 +14,6 @@ export function autopost(options: {
 }) {
   const { groupId, ctx, lessons } = options
 
-  console.log(groupId)
-
   // Object to track notification states for each lesson
   const notificationStates: Record<
     string,
