@@ -53,6 +53,8 @@ export const startAutopostingAll = async (
       lessons: true
     }
   })
+  console.log("START AUTOPOSTING ALL")
+  console.log(groups)
 
   groups.forEach(async group => {
     if (group.lessons.length === 0) return

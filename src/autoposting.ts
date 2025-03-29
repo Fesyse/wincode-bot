@@ -28,6 +28,8 @@ export function autopost(options: {
     const todayLessons = lessons.filter(lesson => lesson.day === currentDay)
 
     todayLessons.forEach(async lesson => {
+      console.log("CHECKING TIME FOR", lesson)
+
       const [hours, minutes] = lesson.startTime.split(":").map(Number)
       const lessonStartTime = new TZDate(new Date(), "Asia/Irkutsk")
       lessonStartTime.setHours(hours, minutes, 0, 0) // Set lesson start time
@@ -51,6 +53,8 @@ export function autopost(options: {
         thirtyMinutesBeforeDiff > -1 &&
         !notificationStates[lesson.id].notifiedBefore
       ) {
+        console.log("NOTIFYING ABOUT LESSON 30 MINUTES BEFORE", lesson)
+
         await ctx.telegram.sendPhoto(groupId, Input.fromBuffer(attentionImage))
         ctx.telegram.sendMessage(
           groupId,
@@ -66,7 +70,9 @@ P.S. Если прочитали данное сообщение поставь�
         timeDiff > -1 &&
         !notificationStates[lesson.id].notifiedStart
       ) {
-        ctx.telegram.sendMessage(groupId, `Занятие уже началось! 🎉`)
+        console.log("NOTIFYING ABOUT LESSON START", lesson)
+
+        await ctx.telegram.sendMessage(groupId, `Занятие уже началось! 🎉`)
         notificationStates[lesson.id].notifiedStart = true // Mark as notified for the start of the lesson
       }
 
