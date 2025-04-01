@@ -48,6 +48,8 @@ export const startAutopostingAll = async (
 ) => {
   if (checkAdmin(ctx)) return
 
+  autopostings.clear()
+
   const groups = await db.query.groups.findMany({
     with: {
       lessons: true
